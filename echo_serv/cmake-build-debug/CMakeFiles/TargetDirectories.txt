@@ -1,0 +1,3 @@
+/home/clay/Desktop/project/echo_serv/cmake-build-debug/CMakeFiles/echo_serv.dir
+/home/clay/Desktop/project/echo_serv/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/clay/Desktop/project/echo_serv/cmake-build-debug/CMakeFiles/rebuild_cache.dir
