@@ -17,6 +17,7 @@ struct doit_arg {
 
 void * t_doit(void * arg);
 
+pthread_mutex_t mutex_;
 int main(int argc, char *argv[])
 {
     int nloops;
@@ -37,6 +38,8 @@ int main(int argc, char *argv[])
     nthreads = stoi(argv[3]);
     nloops = stoi(argv[4]);
     req = string(argv[5]);
+
+    pthread_mutex_init(&mutex_, NULL);
 
     vector<pthread_t> tids(nthreads);
 
@@ -65,20 +68,29 @@ void * t_doit(void * arg)
 
     for(i = 0; i < p_doit_arg->loops; ++i) {
         int sk;
+        // FIXME: most of wrapped functions not thread safe coz stderr.
         sk = Socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
         Connect(sk, reinterpret_cast<sockaddr*>(&p_doit_arg->sa), sizeof(p_doit_arg->sa));  // sa must copy
         Write(sk, p_doit_arg->request.c_str(), p_doit_arg->request.size());
 
         if((n = Readn(sk, reply, p_doit_arg->request.size())) != p_doit_arg->request.size()) {
+            pthread_mutex_lock(&mutex_);
             cerr << "thread " << p_doit_arg->request << ": server returned " << n << " bytes" << endl;
-            if(reply != p_doit_arg->request)
+            pthread_mutex_unlock(&mutex_);
+            if(reply != p_doit_arg->request) {
+                pthread_mutex_lock(&mutex_);
                 cerr << "thread " << p_doit_arg->request << ": server returned " << reply << endl;
+                pthread_mutex_unlock(&mutex_);
+            }
         }
         Close(sk);
     }
 
     delete p_doit_arg;
     p_doit_arg = NULL;
+    pthread_mutex_lock(&mutex_);
     cout << "thread " << pthread_self() % 1000000007 << " done" << endl;
+    pthread_mutex_unlock(&mutex_);
+
     return NULL;
 }
