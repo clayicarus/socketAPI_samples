@@ -1,5 +1,5 @@
 //
-// Created by clay on 22-9-27.
+// Created by clay on 22-9-28.
 //
 
 #include "lib/lnp.h"
@@ -9,8 +9,6 @@
 #include <algorithm>
 
 using namespace std;
-
-void onMessage(int sockfd, array<char, MAXLINE> &buf);
 
 int main(int argc, char *argv[])
 {
@@ -75,7 +73,7 @@ int main(int argc, char *argv[])
                 cout << "no clients readable" << endl;
                 continue;               // only listen sock readable.
             } else {
-                cout << nready << " client(s) readable" << endl;
+                cout << nready << "client(s) readable" << endl;
             }
         }
 
@@ -97,8 +95,6 @@ int main(int argc, char *argv[])
                     cout << "client " << sockfd << " disconnected" << endl;
                 } else {
                     cout << "read " << n << " bytes" << endl;
-                    buf[n] = '\0';
-                    cout << "client: " << buf.data() << endl;
                     Writen(sockfd, buf.data(), n);  // directly write what you read.
                 }
 
@@ -111,9 +107,4 @@ int main(int argc, char *argv[])
     }
 
     // return 0;
-}
-
-void onMessage(int sockfd, array<char, MAXLINE> &buf)
-{
-
 }
