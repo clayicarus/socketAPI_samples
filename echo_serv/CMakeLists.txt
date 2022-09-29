@@ -4,7 +4,7 @@ project(echo_serv)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(echo_serv
-        main.cpp
+        main_poll.cpp
         lib/lnp.h lib/lnpthread.h
         lib/wraplib.cpp lib/wrappthread.cpp lib/wrapsock.cpp lib/wrapstdio.cpp lib/wrapunix.cpp
         lib/writen.cpp
